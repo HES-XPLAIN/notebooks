@@ -1,7 +1,10 @@
 import torch
+import os
 from finetuneefficientnet import FineTunedEfficientNet
 from tqdm.auto import tqdm
 from sklearn.metrics import f1_score, confusion_matrix, balanced_accuracy_score
+import argparse
+from helpers import get_dataloaders
 
 def evaluate(model_path, test_loader):
     """
@@ -55,3 +58,18 @@ def evaluate(model_path, test_loader):
     cm = confusion_matrix(y_true, y_pred)
 
     return accuracy, F1s, cm
+
+
+if __name__ == '__main__':
+    home_path = "/home/arthur.babey/workspace/hes-xplain-arthur/use_case_sport_classification"
+    saved_model_path = os.path.join(home_path, "models", "saved_models")
+
+    parser = argparse.ArgumentParser(description="Evaluating script")
+    parser.add_argument('--model_name', type=str, default='model', help='name of the model you want to evaluate')
+    args = parser.parse_args()
+
+    modelname = args.model_name
+    model_path = os.path.join(saved_model_path, modelname)
+
+    _, _, test_loader = get_dataloaders()
+    _, _, _ = evaluate(model_path=model_path, test_loader=test_loader)
