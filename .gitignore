@@ -1,6 +1,6 @@
 # train data
 use_case_sport_classification/data/train/
-
+use_case_sport_classification/data/valid/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
