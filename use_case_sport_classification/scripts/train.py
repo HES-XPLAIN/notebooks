@@ -3,10 +3,11 @@ import torch.nn as nn
 import argparse
 
 from tqdm.auto import tqdm
-from helpers import *
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.optim import Adam
-from finetuneefficientnet import FineTunedEfficientNet
+
+from .finetunedefficientnet import FineTunedEfficientNet
+from .helpers import *
 
 
 def train(model, train_loader, optimizer, criterion):

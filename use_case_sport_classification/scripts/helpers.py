@@ -5,7 +5,7 @@ import torchvision.transforms as transforms
 import torch
 from torch.utils.data import DataLoader
 from sklearn.preprocessing import LabelEncoder
-from sport_dataset import SportsData
+from .sport_dataset import SportsData
 from PIL import Image
 
 

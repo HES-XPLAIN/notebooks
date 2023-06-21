@@ -1,10 +1,12 @@
 import torch
 import os
-from finetuneefficientnet import FineTunedEfficientNet
-from tqdm.auto import tqdm
-from sklearn.metrics import f1_score, confusion_matrix, balanced_accuracy_score
 import argparse
-from helpers import get_dataloaders
+
+from tqdm.auto import tqdm
+from sklearn.metrics import f1_score, confusion_matrix
+
+from .helpers import get_dataloaders
+from .finetunedefficientnet import FineTunedEfficientNet
 
 def evaluate(model_path, test_loader):
     """
