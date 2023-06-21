@@ -1,24 +1,21 @@
-"""
-Fine-tuned EfficientNet Model
-
-This script defines a PyTorch module that implements a fine-tuned version of the EfficientNet model.
-The model is initialized with the EfficientNet-B3 architecture and allows for customization of the
-number of output classes. The weights of the model can be optionally loaded from pre-trained weights
-on the ImageNet dataset. The last fully connected layer and a selected convolutional block are made
-trainable while freezing the rest of the model's parameters. This script serves as a template for
-fine-tuning EfficientNet models for various image classification tasks.
-
-"""
-
 import torch.nn as nn
 import torchvision.models as models
 
+
 class FineTunedEfficientNet(nn.Module):
-    def __init__(self, num_classes, weights='IMAGENET1K_V1'):
+    def __init__(self, num_classes=100, weights='IMAGENET1K_V1'):
+        """
+        Initializes a fine-tuned EfficientNet model.
+
+        :param num_classes: The number of output classes.
+        :type num_classes: int
+        :param weights: The pre-trained weights to load for the EfficientNet model.
+        :type weights: str
+        """
         super(FineTunedEfficientNet, self).__init__()
 
-        # Load the EfficientNet-B3 model
-        self.model = models.efficientnet_b3(weights=weights)
+        # Load the EfficientNet-B0 model
+        self.model = models.efficientnet_b0(weights=weights)
 
         # Retrieve the number of input features and dropout probability from the original classifier
         num_features = self.model.classifier[1].in_features
@@ -40,4 +37,12 @@ class FineTunedEfficientNet(nn.Module):
             param.requires_grad = True
 
     def forward(self, x):
+        """
+        Forward pass of the fine-tuned EfficientNet model.
+
+        :param x: The input tensor.
+        :type x: torch.Tensor
+        :return: The output tensor.
+        :rtype: torch.Tensor
+        """
         return self.model(x)
