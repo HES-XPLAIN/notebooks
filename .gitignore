@@ -3,7 +3,7 @@ use_case_sport_classification/data/train/
 use_case_sport_classification/data/valid/
 
 # models
-use_case_sport_classification/models/saved_models/FineTunedEfficientNet_21_06.pth/
+#use_case_sport_classification/models/saved_models/FineTunedEfficientNet_21_06.pth/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
