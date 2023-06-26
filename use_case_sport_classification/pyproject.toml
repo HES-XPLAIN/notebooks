@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "use-case-sport-classification"
+version = "0.1.0"
+description = "HES-XPLAIN notebook"
+authors = ["Arthur Babey <arthur.babey@heig-vd.ch>"]
+license = "BSD-3-Clause"
+readme = "README.md"
+packages = [{include = "use_case_sport_classification"}]
+
+[tool.poetry.dependencies]
+python = "^3.8.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
