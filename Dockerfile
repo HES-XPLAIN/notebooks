@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.8.0-base-ubuntu20.04
+FROM jupyter/base-notebook:python-3.10
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
