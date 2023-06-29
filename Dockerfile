@@ -20,7 +20,7 @@ RUN python3 -m pip install --upgrade pip
 
 # Install PyTorch and torchvision
 # RUN pip3 install torch torchvision torchaudio -f https://download.pytorch.org/whl/cu111/torch_stable.html
-RUN pip3 install torch torchvision torchaudio
+RUN pip3 install 'torch==2.0.1' 'torchvision==0.15.2' 'torchaudio==2.0.2' --index-url https://download.pytorch.org/whl/cpu
 
 # Set the working directory
 WORKDIR /app
