@@ -1,4 +1,3 @@
-jupyterlab==4.0.2
 omnixai==1.3.0
 opencv-python==4.7.0.72
 pandas==2.0.2
