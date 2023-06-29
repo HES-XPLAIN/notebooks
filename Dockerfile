@@ -7,7 +7,7 @@ ARG NB_USER=jovyan
 # ARG NB_UID=1000
 ENV USER ${NB_USER}
 # ENV NB_UID ${NB_UID}
-# ENV HOME /home/${NB_USER}
+ENV HOME /home/${NB_USER}
 #
 # RUN adduser --disabled-password \
 #     --gecos "Default user" \
@@ -17,31 +17,26 @@ ENV USER ${NB_USER}
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
 # USER root
-# RUN chown -R ${NB_UID} ${HOME}
+RUN chown -R ${NB_UID} ${HOME}
 # USER ${NB_USER}
 
-# Install system dependencies
-# RUN apt-get update && \
-#     apt-get install -y \
-#         git \
-#         python3-pip \
-#         python3-dev \
-#         libglib2.0-0
+# Set the working directory
+WORKDIR ${HOME}
 
 # Install any python packages you need
-COPY requirements.txt requirements.txt
-
-RUN python3 -m pip install -r requirements.txt
+# COPY requirements.txt requirements.txt
 
 # Upgrade pip
-RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install --no-cache-dir --upgrade pip
+
+RUN python3 -m pip install --no-cache-dir -r requirements.txt
+
+
 
 # Install PyTorch and torchvision
 # RUN pip3 install torch torchvision torchaudio -f https://download.pytorch.org/whl/cu111/torch_stable.html
-RUN pip3 install 'torch==2.0.1' 'torchvision==0.15.2' 'torchaudio==2.0.2' --index-url https://download.pytorch.org/whl/cpu
-
-# Set the working directory
-WORKDIR /app
+#RUN pip3 install 'torch==2.0.1' 'torchvision==0.15.2' 'torchaudio==2.0.2' --index-url https://download.pytorch.org/whl/cpu
+RUN pip3 install 'torch==2.0.1+cpu' 'torchvision==0.15.2+cpu' 'torchaudio==2.0.2+cpu' -f https://download.pytorch.org/whl/torch_stable.html
 
 USER ${NB_USER}
 
