@@ -14,6 +14,9 @@ ENV HOME /home/${NB_USER}
 #     --uid ${NB_UID} \
 #     ${NB_USER}
 
+RUN apt update -y
+RUN apt-get install -y build-essential
+
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
 # USER root
