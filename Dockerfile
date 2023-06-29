@@ -38,8 +38,8 @@ RUN python3 -m pip install --no-cache-dir -r requirements.txt
 
 # Install PyTorch and torchvision
 # RUN pip3 install torch torchvision torchaudio -f https://download.pytorch.org/whl/cu111/torch_stable.html
-#RUN pip3 install 'torch==2.0.1' 'torchvision==0.15.2' 'torchaudio==2.0.2' --index-url https://download.pytorch.org/whl/cpu
-RUN pip3 install 'torch==2.0.1+cpu' 'torchvision==0.15.2+cpu' 'torchaudio==2.0.2+cpu' -f https://download.pytorch.org/whl/torch_stable.html
+RUN pip3 install 'torch==2.0.1+cpu' 'torchvision==0.15.2+cpu' 'torchaudio==2.0.2+cpu' --index-url https://download.pytorch.org/whl/cpu
+#RUN pip3 install 'torch==2.0.1+cpu' 'torchvision==0.15.2+cpu' 'torchaudio==2.0.2+cpu' -f https://download.pytorch.org/whl/torch_stable.html
 
 USER ${NB_USER}
 
