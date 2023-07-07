@@ -26,9 +26,9 @@ def test_transform():
     return transform
 
 def get_dataloaders():
-    data = pd.read_csv("../data/sports.csv")
+    data = pd.read_csv("./data/sports.csv")
     data.head()
-    data["image_path"] = "../data/" + data["filepaths"]
+    data["image_path"] = "./data/" + data["filepaths"]
     lbl = LabelEncoder()
     data["labels_encoded"] = lbl.fit_transform(data["labels"])
     data = data[~data['image_path'].str.endswith('.lnk')]
@@ -57,7 +57,7 @@ def save_model(epochs, model, optimizer, criterion, name):
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
                 'loss': criterion,
-                }, f"/home/arthur.babey/workspace/hes-xplain-arthur/use_case_sport_classification/models/saved_models/{name}.pth")
+                }, f"./models/saved_models/{name}.pth")
 
     print("Model saved :)")
 
