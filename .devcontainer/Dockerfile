@@ -2,12 +2,12 @@ FROM docker.io/jupyter/base-notebook:latest
 
 USER root
 
-RUN apt-get update
-RUN apt-get install 
+# RUN apt-get update
+# RUN apt-get install 
 
 # Upgrade pip
-RUN python3 -m pip install --no-cache-dir --upgrade pip
-RUN python3 -m pip install --no-cache-dir -r requirements.txt
+# RUN python3 -m pip install --no-cache-dir --upgrade pip
+# RUN python3 -m pip install --no-cache-dir -r requirements.txt
 
 # Install PyTorch and torchvision
 # RUN pip3 install torch torchvision -f https://download.pytorch.org/whl/cu118/torch_stable.html
