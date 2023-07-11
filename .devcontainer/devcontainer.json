@@ -3,7 +3,7 @@
 {
 	"name": "Jupyter Data Science Notebooks",
 	"build": {
-		"dockerfile": "Dockerfile"
+		"dockerfile": "../Dockerfile"
 	},
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
@@ -13,8 +13,8 @@
 			"userUid": "1000",
 			"userGid": "1000",
 			"upgradePackages": "true"
-		},
-		"ghcr.io/devcontainers/features/nvidia-cuda:1": {}
+		}
+//		"ghcr.io/devcontainers/features/nvidia-cuda:1": {}
 	},
 	// Use base images default CMD.
 	"overrideCommand": false,
