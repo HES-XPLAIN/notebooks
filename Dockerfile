@@ -12,7 +12,7 @@ ENV HOME /home/${USER}
 RUN apt-get update -y
 RUN apt-get install -y build-essential
 # generic GL provider. FIXME: install nVidia version
-RUN apt-get install -y libgl1-mesa-glx
+RUN apt-get install -y libgl1-mesa-glx libglib2.0-0
 
 # Make sure the contents of our repo is in $HOME
 #COPY . $HOME
