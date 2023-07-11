@@ -19,7 +19,6 @@ RUN apt-get install -y libgl1-mesa-glx libglib2.0-0
 COPY requirements.txt $HOME/
 COPY use_case_sport_classification/data/ $HOME/data/
 COPY use_case_sport_classification/models/ $HOME/models/
-COPY use_case_sport_classification/notebooks/ $HOME/notebooks/
 COPY use_case_sport_classification/scripts/ $HOME/scripts/
 COPY use_case_sport_classification/README.md $HOME/README.md
 RUN chown -R ${UID} ${HOME}
