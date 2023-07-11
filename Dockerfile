@@ -17,10 +17,11 @@ RUN apt-get install -y libgl1-mesa-glx libglib2.0-0
 # Make sure the contents of our repo is in $HOME
 #COPY . $HOME
 COPY requirements.txt $HOME/
+COPY use_case_sport_classification/sport_image_classification.ipynb $HOME/
 COPY use_case_sport_classification/data/ $HOME/data/
 COPY use_case_sport_classification/models/ $HOME/models/
 COPY use_case_sport_classification/scripts/ $HOME/scripts/
-COPY use_case_sport_classification/README.md $HOME/README.md
+COPY use_case_sport_classification/README.md $HOME/
 RUN chown -R ${UID} ${HOME}
 
 # Set working directory
