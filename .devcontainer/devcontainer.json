@@ -6,16 +6,16 @@
 		"dockerfile": "../Dockerfile"
 	},
 	// Features to add to the dev container. More info: https://containers.dev/features.
-	"features": {
-		"ghcr.io/devcontainers/features/common-utils:2": {
-			"installZsh": "true",
-			"username": "xplain",
-			"userUid": "1000",
-			"userGid": "1000",
-			"upgradePackages": "true"
-		}
+//	"features": {
+//		"ghcr.io/devcontainers/features/common-utils:2": {
+//			"installZsh": "true",
+//			"username": "xplain",
+//			"userUid": "1000",
+//			"userGid": "1000",
+//			"upgradePackages": "true"
+//		}
 //		"ghcr.io/devcontainers/features/nvidia-cuda:1": {}
-	},
+//	},
 	// Use base images default CMD.
 	"overrideCommand": false,
 	// Forward Jupyter port locally, mark required.
