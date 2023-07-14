@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  pytorch:
+    tty: true
+    image: ghcr.io/hes-xplain/notebooks:latest
+    volumes:
+      - '.:/app'
