@@ -1,4 +1,4 @@
-FROM docker.io/rmarquis/xplain-base:latest
+FROM ghcr.io/hes-xplain/docker-notebook-base:latest
 
 USER root
 
