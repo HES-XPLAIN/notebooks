@@ -12,4 +12,3 @@ services:
 networks:
   default:
     name: nat
-    external: true
