@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 from sklearn.preprocessing import LabelEncoder
 from .sport_dataset import SportsData
 from PIL import Image
-
+import os
 
 
 def train_transform():
@@ -25,7 +25,7 @@ def test_transform():
     ])
     return transform
 
-def get_dataloaders():
+def get_dataloaders(batch_size=32):
     data = pd.read_csv("./data/sports.csv")
     data.head()
     data["image_path"] = "./data/" + data["filepaths"]
@@ -39,13 +39,23 @@ def get_dataloaders():
     valid_dataset = SportsData(df=df_valid, transform=train_transform())
     test_dataset = SportsData(df=df_test, transform=test_transform())
 
-    train_loader = DataLoader(dataset=train_dataset, batch_size=32, shuffle=True)
-    val_loader = DataLoader(dataset=valid_dataset, batch_size=32, shuffle=True)
-    test_loader = DataLoader(dataset=test_dataset, batch_size=32, shuffle=True)
+    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+    val_loader = DataLoader(dataset=valid_dataset, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=True)
 
     return train_loader, val_loader, test_loader
 
-
+def load_dict(resume_path, model):
+    if os.path.isfile(resume_path):
+        checkpoint = torch.load(resume_path)
+        model_dict = model.state_dict()
+        model_dict.update(checkpoint['model_state_dict'])
+        model.load_state_dict(model_dict)
+        # delete to release more space
+        del checkpoint
+    else:
+        sys.exit("=> No checkpoint found at '{}'".format(resume_path))
+    return model
 
 def save_model(epochs, model, optimizer, criterion, name):
     """

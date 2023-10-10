@@ -41,5 +41,4 @@ class SportsData(Dataset):
         image = Image.open(image_path).convert('RGB')
         image = self.transform(image)
 
-        return image, label
-
+        return image, label, image_path
