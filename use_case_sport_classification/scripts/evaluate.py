@@ -35,7 +35,7 @@ def evaluate(model_path, test_loader):
     with torch.no_grad():
         model.eval()
         for i, data in tqdm(enumerate(test_loader), total=len(test_loader)):
-            inputs, labels = data
+            inputs, labels, _ = data
             inputs, labels = inputs.to(device), labels.to(device)  # move the labels to the device
 
             # forward pass

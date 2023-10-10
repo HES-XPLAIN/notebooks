@@ -33,7 +33,7 @@ def train(model, train_loader, optimizer, criterion):
 
     for i, data in tqdm(enumerate(train_loader), total=len(train_loader)):
         counter += 1
-        image, labels = data
+        image, labels, _ = data
         image = image.to(device)
         labels = labels.float().to(device)
         optimizer.zero_grad()
@@ -79,7 +79,7 @@ def validate(model, val_loader, criterion):
     valid_running_correct = 0
     counter = 0
     with torch.no_grad():
-        for i, data in tqdm(enumerate(val_loader), total=len(val_loader)):
+        for i, data, _ in tqdm(enumerate(val_loader), total=len(val_loader)):
             counter += 1
             image, labels = data
             image = image.to(device)
