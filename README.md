@@ -41,11 +41,19 @@ COPY --chown="${USER_UID}:${USER_GID}" use_case_sport_classification/ $HOME
 > **Note**
 > The current list of included high-level dependencies is visible here: [requirements.txt](https://github.com/HES-XPLAIN/docker-notebook-base/blob/main/requirements.txt)
 
-## Release
+## Build
 
-To publish the image on the GitHub Packages registry, see [RELEASE](RELEASE.md).
+### authenticate (build from ghcr.io)
 
-## Cheat Sheet
+A [Personal Authentication Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+with the `read repository` permission needs to be generated.
+
+```shell
+PAT=abcdef123456789
+echo $PAT | docker login -u <username> ghcr.io --password-stdin
+```
+
+This is necessary to pull the docker-notebook-base image that is hosted on the GitHub Container registry.
 
 ### build
 
@@ -53,13 +61,17 @@ To publish the image on the GitHub Packages registry, see [RELEASE](RELEASE.md).
 docker build -t xplain-notebook .
 ```
 
+## Run
+
 ### run and launch jupyter
 
 ```
 docker run --rm -p 8080:8080 -p 8888:8888 -it xplain-notebook
 ```
 
-### authenticate
+## Release (manual)
+
+### authenticate (push to ghcr.io)
 
 A [Personal Authentication Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
 with the `read repository` permission needs to be generated.
@@ -77,3 +89,7 @@ docker push ghcr.io/hes-xplain/xplain-notebook:latest
 ```
 
 If `ghcr.io` is omitted, the registry used will be [Docker Hub](https://hub.docker.com/).
+
+## Release
+
+To publish the package on the GitHub Packages registry, see [RELEASE](RELEASE.md).
