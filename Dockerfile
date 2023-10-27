@@ -16,6 +16,10 @@ COPY --chown="${USER_UID}:${USER_GID}" use_case_sport_classification/ $HOME
 # Set working directory
 WORKDIR ${HOME}
 
+# Download external files
+RUN curl -OL https://huggingface.co/HES-XPLAIN/sport_classification/resolve/main/FineTunedEfficientNet_30epochs.pth -o models/saved_models/FineTunedEfficientNet_30epochs.pth
+RUN curl -OL https://huggingface.co/HES-XPLAIN/sport_classification/resolve/main/VGGFineTuned.pth -o models/saved_models/VGGFineTuned.pth
+
 ENV JUPYTER_PORT=8888
 EXPOSE ${JUPYTER_PORT}
 
