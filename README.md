@@ -58,7 +58,7 @@ This is necessary to pull the docker-notebook-base image that is hosted on the G
 ### build
 
 ```
-docker build -t xplain-notebook .
+docker buildx build -t xplain-notebook .
 ```
 
 ## Run
