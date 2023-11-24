@@ -69,6 +69,12 @@ docker buildx build -t xplain-notebook .
 docker run --rm -p 8080:8080 -p 8888:8888 -it xplain-notebook
 ```
 
+### run and override entry point
+
+```
+docker run --rm -it --entrypoint /bin/bash xplain-notebook
+```
+
 ## Release (manual)
 
 ### authenticate (push to ghcr.io)
