@@ -37,7 +37,8 @@
         "codespaces": {
             "openFiles": [
                 "README.md",
-                "use_case_sport_classification/cam_demo.ipynb"
+                "use_case_sport_classification/cam_demo.ipynb",
+                "use_case_sport_classification/rules_extraction_demo.ipynb"
             ]
         }
     }
