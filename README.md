@@ -58,7 +58,7 @@ This is necessary to pull the docker-notebook-base image that is hosted on the G
 ### build
 
 ```
-docker buildx build -t xplain-notebook .
+docker buildx build -t notebooks .
 ```
 
 ## Run
@@ -66,13 +66,13 @@ docker buildx build -t xplain-notebook .
 ### run and launch jupyter
 
 ```
-docker run --rm -p 8080:8080 -p 8888:8888 -it xplain-notebook
+docker run --rm -p 8080:8080 -p 8888:8888 -it notebooks
 ```
 
 ### run and override entry point
 
 ```
-docker run --rm -it --entrypoint /bin/bash xplain-notebook
+docker run --rm -it --entrypoint /bin/bash notebooks
 ```
 
 ## Release (manual)
@@ -90,8 +90,8 @@ echo $PAT | docker login -u <username> ghcr.io --password-stdin
 ### tag and push image to registry
 
 ```shell
-docker image tag xplain-notebook:latest ghcr.io/hes-xplain/xplain-notebook:latest
-docker push ghcr.io/hes-xplain/xplain-notebook:latest
+docker image tag notebooks:latest ghcr.io/hes-xplain/notebooks:latest
+docker push ghcr.io/hes-xplain/notebooks:latest
 ```
 
 If `ghcr.io` is omitted, the registry used will be [Docker Hub](https://hub.docker.com/).
