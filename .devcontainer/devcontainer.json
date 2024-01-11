@@ -41,9 +41,9 @@
                 "use_case_sport_classification/rules_extraction_demo.ipynb"
             ]
         }
-    }
+    },
     // Use 'postCreateCommand' to run commands after the container is created.
-    // "postCreateCommand": "pip3 install --user -r requirements.txt",
+    "postCreateCommand": "mkdir -p models/saved_models && curl -OL https://huggingface.co/HES-XPLAIN/sport_classification/resolve/main/FineTunedEfficientNet_30epochs.pth -o models/saved_models/FineTunedEfficientNet_30epochs.pth && curl -OL https://huggingface.co/HES-XPLAIN/sport_classification/resolve/main/VGGFineTuned.pth -o models/saved_models/VGGFineTuned.pth",
 
     // Configure tool-specific properties.
     // "customizations": {},
