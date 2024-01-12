@@ -8,6 +8,13 @@ services:
     - "8888:8888"
     networks:
     - default
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
 networks:
   default:
