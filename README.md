@@ -65,6 +65,15 @@ docker buildx build -t notebooks .
 
 ### run and launch jupyter
 
+
+To use GPU support (CUDA), ensure the [nVidia Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) is installed.
+
+```
+docker run --rm -p 8080:8080 -p 8888:8888 -it --gpus all notebooks
+```
+
+To run the image with CPU support only:
+
 ```
 docker run --rm -p 8080:8080 -p 8888:8888 -it notebooks
 ```
