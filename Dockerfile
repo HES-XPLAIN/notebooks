@@ -19,8 +19,8 @@ WORKDIR ${HOME}
 # Download external files
 RUN curl -OL https://huggingface.co/HES-XPLAIN/sport_classification/resolve/main/FineTunedEfficientNet_30epochs.pth -o FineTunedEfficientNet_30epochs.pth
 RUN curl -OL https://huggingface.co/HES-XPLAIN/sport_classification/resolve/main/VGGFineTuned.pth -o VGGFineTuned.pth
-RUN mkdir -p ${HOME}/models/saved_models
-RUN mv ${HOME}/*.pth ${HOME}/models/saved_models
+RUN mkdir -p ${HOME}/models_weight
+RUN mv ${HOME}/*.pth ${HOME}/models_weight
 
 ENV JUPYTER_PORT=8888
 EXPOSE ${JUPYTER_PORT}
