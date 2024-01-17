@@ -6,7 +6,7 @@ from tqdm.auto import tqdm
 from sklearn.metrics import f1_score, confusion_matrix
 
 from .helpers import get_dataloaders
-from .finetunedefficientnet import FineTunedEfficientNet
+from .models import FineTunedEfficientNet
 
 def evaluate(model_path, test_loader):
     """
@@ -21,7 +21,7 @@ def evaluate(model_path, test_loader):
     """
     # loading model
     model = FineTunedEfficientNet()
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"The device is: {device}")
     checkpoint = torch.load(model_path, map_location=device)
     print('Loading trained model weights...')

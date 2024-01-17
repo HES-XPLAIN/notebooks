@@ -1,18 +1,19 @@
-import matplotlib.pyplot as plt
+import os, sys
 import numpy as np
 import pandas as pd
-import torchvision.transforms as transforms
 import torch
+import matplotlib.pyplot as plt
+
+from torchvision import transforms
 from torch.utils.data import DataLoader
 from sklearn.preprocessing import LabelEncoder
-from .sport_dataset import SportsData
 from PIL import Image
-import os
+from .custom_dataset import CustomDataset
 
 
 def train_transform():
     transform = transforms.Compose([
-        transforms.RandomHorizontalFlip(p=0.1),
+       # transforms.RandomHorizontalFlip(p=0.1),
         transforms.Resize((224, 224)),
         transforms.ToTensor()
     ])
@@ -25,7 +26,7 @@ def test_transform():
     ])
     return transform
 
-def get_dataloaders(batch_size=32):
+def get_dataloaders(batch_size=16):
     data = pd.read_csv("./data/sports.csv")
     data.head()
     data["image_path"] = "./data/" + data["filepaths"]
@@ -35,13 +36,13 @@ def get_dataloaders(batch_size=32):
     df_train = data[data["data set"] == "train"].reset_index(drop=True)
     df_valid = data[data["data set"] == "valid"].reset_index(drop=True)
     df_test = data[data["data set"] == "test"].reset_index(drop=True)
-    train_dataset = SportsData(df=df_train, transform=train_transform())
-    valid_dataset = SportsData(df=df_valid, transform=train_transform())
-    test_dataset = SportsData(df=df_test, transform=test_transform())
+    train_dataset = CustomDataset(df=df_train, transform=train_transform())
+    valid_dataset = CustomDataset(df=df_valid, transform=train_transform())
+    test_dataset = CustomDataset(df=df_test, transform=test_transform())
 
-    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
-    val_loader = DataLoader(dataset=valid_dataset, batch_size=batch_size, shuffle=True)
-    test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=True)
+    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=False)
+    val_loader = DataLoader(dataset=valid_dataset, batch_size=batch_size, shuffle=False)
+    test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
 
     return train_loader, val_loader, test_loader
 

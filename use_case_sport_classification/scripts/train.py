@@ -6,7 +6,7 @@ from tqdm.auto import tqdm
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.optim import Adam
 
-from .finetunedefficientnet import FineTunedEfficientNet
+from .models import FineTunedEfficientNet
 from .helpers import *
 
 
