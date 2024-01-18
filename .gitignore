@@ -2,6 +2,8 @@
 use_case_sport_classification/data/train/
 use_case_sport_classification/data/valid/
 use_case_sport_classification/data/test/
+use_case_sport_classification/data/sports.csv
+use_case_sport_classification/data/idx_to_names.json
 
 # models
 use_case_sport_classification/models_weight/FineTunedEfficientNet_30epochs.pth
