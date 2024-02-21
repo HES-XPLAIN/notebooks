@@ -6,8 +6,8 @@ from tqdm.auto import tqdm
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.optim import Adam
 
-from .models import FineTunedEfficientNet, FineTunedVGG
-from .helpers import *
+from models import FineTunedEfficientNet, FineTunedVGG
+from helpers import *
 
 
 def train(model, train_loader, optimizer, criterion):

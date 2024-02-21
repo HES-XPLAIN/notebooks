@@ -65,6 +65,10 @@ if __name__ == '__main__':
     parser.add_argument('--model_name', type=str, default='model', help='name of the model you want to evaluate')
     parser.add_argument('--model_type', type=str, default='vgg', help='model type: vgg or efficientnet')
     args = parser.parse_args()
+
+    _, _, test_loader = get_dataloaders()
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
     # loading model
     if args.model_type == 'vgg':
         model = FineTunedVGG()
