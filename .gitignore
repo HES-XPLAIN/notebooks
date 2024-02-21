@@ -6,8 +6,8 @@ use_case_sport_classification/data/sports.csv
 use_case_sport_classification/data/idx_to_names.json
 
 # models
-use_case_sport_classification/models_weight/FineTunedEfficientNet_30epochs.pth
-use_case_sport_classification/models_weight/VGGFineTuned.pth
+models_weight/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
