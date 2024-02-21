@@ -6,9 +6,9 @@ from tqdm.auto import tqdm
 from sklearn.metrics import f1_score, confusion_matrix
 
 from .helpers import get_dataloaders
-from .models import FineTunedEfficientNet
+from .models import FineTunedEfficientNet, FineTunedVGG
 
-def evaluate(model_path, test_loader):
+def evaluate(model, test_loader):
     """
     Evaluates the performance of a trained model on a test dataset.
 
@@ -20,12 +20,8 @@ def evaluate(model_path, test_loader):
     :rtype: float, float, numpy.ndarray
     """
     # loading model
-    model = FineTunedEfficientNet()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"The device is: {device}")
-    checkpoint = torch.load(model_path, map_location=device)
-    print('Loading trained model weights...')
-    model.load_state_dict(checkpoint['model_state_dict'])
     model.to(device)
     model.eval()
 
@@ -63,15 +59,24 @@ def evaluate(model_path, test_loader):
 
 
 if __name__ == '__main__':
-    home_path = "/home/arthur.babey/workspace/hes-xplain-arthur/use_case_sport_classification"
-    saved_model_path = os.path.join(home_path, "models", "saved_models")
 
+    saved_model_path = './models_weight/'
     parser = argparse.ArgumentParser(description="Evaluating script")
     parser.add_argument('--model_name', type=str, default='model', help='name of the model you want to evaluate')
+    parser.add_argument('--model_type', type=str, default='vgg', help='model type: vgg or efficientnet')
     args = parser.parse_args()
-
-    modelname = args.model_name
-    model_path = os.path.join(saved_model_path, modelname)
+    # loading model
+    if args.model_type == 'vgg':
+        model = FineTunedVGG()
+    elif 'efficientnet' == args.model_type:
+        model = FineTunedEfficientNet()
+    else:
+        raise ValueError(f'Model {args.model_type} is not supported')
+    model_name = args.model_name
+    model_path = os.path.join(saved_model_path, model_name)
+    checkpoint = torch.load(model_path, map_location=device)
+    print('Loading trained model weights...')
+    model.load_state_dict(checkpoint['model_state_dict'])
 
     _, _, test_loader = get_dataloaders()
-    _, _, _ = evaluate(model_path=model_path, test_loader=test_loader)
+    _, _, _ = evaluate(model=model, test_loader=test_loader)

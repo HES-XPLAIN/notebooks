@@ -13,7 +13,7 @@ from .custom_dataset import CustomDataset
 
 def train_transform():
     transform = transforms.Compose([
-       # transforms.RandomHorizontalFlip(p=0.1),
+        transforms.RandomHorizontalFlip(p=0.1),
         transforms.Resize((224, 224)),
         transforms.ToTensor()
     ])
@@ -28,10 +28,10 @@ def test_transform():
 
 def get_dataloaders(batch_size=16):
     data = pd.read_csv("./data/sports.csv")
-    data.head()
     data["image_path"] = "./data/" + data["filepaths"]
     lbl = LabelEncoder()
     data["labels_encoded"] = lbl.fit_transform(data["labels"])
+    # this image path is corrupted
     data = data[~data['image_path'].str.endswith('.lnk')]
     df_train = data[data["data set"] == "train"].reset_index(drop=True)
     df_valid = data[data["data set"] == "valid"].reset_index(drop=True)
@@ -40,9 +40,9 @@ def get_dataloaders(batch_size=16):
     valid_dataset = CustomDataset(df=df_valid, transform=train_transform())
     test_dataset = CustomDataset(df=df_test, transform=test_transform())
 
-    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=False)
-    val_loader = DataLoader(dataset=valid_dataset, batch_size=batch_size, shuffle=False)
-    test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
+    train_loader = DataLoader(dataset=train_dataset, batch_size=16, shuffle=True)
+    val_loader = DataLoader(dataset=valid_dataset, batch_size=16, shuffle=True)
+    test_loader = DataLoader(dataset=test_dataset, batch_size=16, shuffle=True)
 
     return train_loader, val_loader, test_loader
 
@@ -68,7 +68,7 @@ def save_model(epochs, model, optimizer, criterion, name):
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
                 'loss': criterion,
-                }, f"./models/saved_models/{name}.pth")
+                }, f"./models_weight/{name}.pth")
 
     print("Model saved :)")
 
@@ -90,7 +90,7 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss, name):
     plt.xlabel('Epochs')
     plt.ylabel('Accuracy')
     plt.legend()
-    plt.savefig(f"../models/plots/{name}_accuracy_plot.png")
+    plt.savefig(f"./plots/{name}_accuracy_plot.png")
 
     # loss plots
     plt.figure(figsize=(10, 7))
@@ -105,7 +105,7 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss, name):
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
     plt.legend()
-    plt.savefig(f"../models/plots/{name}_loss_plot.png")
+    plt.savefig(f"./plots/{name}_loss_plot.png")
 
 
 def plot_prediction(model, image_path, transform, class_dict):

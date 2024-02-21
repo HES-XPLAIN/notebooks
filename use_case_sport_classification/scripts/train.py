@@ -6,7 +6,7 @@ from tqdm.auto import tqdm
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.optim import Adam
 
-from .models import FineTunedEfficientNet
+from .models import FineTunedEfficientNet, FineTunedVGG
 from .helpers import *
 
 
@@ -79,9 +79,9 @@ def validate(model, val_loader, criterion):
     valid_running_correct = 0
     counter = 0
     with torch.no_grad():
-        for i, data, _ in tqdm(enumerate(val_loader), total=len(val_loader)):
+        for i, data in tqdm(enumerate(val_loader), total=len(val_loader)):
             counter += 1
-            image, labels = data
+            image, labels, _ = data
             image = image.to(device)
             labels = labels.float().to(device)
             # Forward pass.
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     # construct the argument parser
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '-e', '--epochs', type=int, default=20,
+        '-e', '--epochs', type=int, default=50,
         help='Number of epochs to train our network for'
     )
     parser.add_argument(
@@ -113,29 +113,36 @@ if __name__ == '__main__':
         help='Learning rate for training the model'
     )
 
+    parser.add_argument('-m', '--model', type=str, default='vgg', help='model type: vgg or efficientnet')
     parser.add_argument('--name', type=str, default='default_name', help='Custom name')
     args = vars(parser.parse_args())
 
     # Learning_parameters.
     lr = args['learning_rate']
     epochs = args['epochs']
+    model_type = args['model']
     model_name = args['name']
-
 
     train_loader, val_loader, _ = get_dataloaders()
     home_path = "/home/arthur.babey/workspace/hes-xplain-arthur/use_case_sport_classification/"
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    model = FineTunedEfficientNet()
+    if model_type == 'vgg':
+        model = FineTunedVGG()
+    elif model_type == 'efficientnet':
+        model = FineTunedEfficientNet()
+    else:
+        raise ValueError(f'The {model_type} model is not supported')
+
     model.to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = Adam(model.parameters(), lr=lr)
 
     # Total parameters and trainable parameters.
-    total_params = sum(p.numel() for p in model.model.parameters())
+    total_params = sum(p.numel() for p in model.parameters())
     print(f"{total_params:,} total parameters.")
     total_trainable_params = sum(
-        p.numel() for p in model.model.parameters() if p.requires_grad)
+        p.numel() for p in model.parameters() if p.requires_grad)
     print(f"{total_trainable_params:,} training parameters.")
 
     train_losses, val_losses = [], []
