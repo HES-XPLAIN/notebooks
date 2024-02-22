@@ -12,11 +12,9 @@ class FineTunedVGG(nn.Module):
         self.avgpool = vgg.avgpool
         self.classifier = vgg.classifier
 
-        """
         # Freeze all layers
         for param in vgg.parameters():
-            param.requires_grad = False
-        """
+            param.requires_grad = True
         
     def forward(self, x):
         x = self.features(x)

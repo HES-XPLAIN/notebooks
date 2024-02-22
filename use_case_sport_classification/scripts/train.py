@@ -124,7 +124,6 @@ if __name__ == '__main__':
     model_name = args['name']
 
     train_loader, val_loader, _ = get_dataloaders()
-    home_path = "/home/arthur.babey/workspace/hes-xplain-arthur/use_case_sport_classification/"
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     if model_type == 'vgg':
