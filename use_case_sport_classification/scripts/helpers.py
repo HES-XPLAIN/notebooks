@@ -2,6 +2,7 @@ import os, sys
 import numpy as np
 import pandas as pd
 import torch
+import torch.nn as nn
 import matplotlib.pyplot as plt
 
 from torchvision import transforms
@@ -185,3 +186,72 @@ def plot_confusion_matrix(confusion_matrix, class_labels):
 
     # Show the plot
     plt.show()
+
+
+def loader_unique_class(class_name):
+    data = pd.read_csv("./data/sports.csv")
+    data["image_path"] = "./data/" + data["filepaths"]
+    lbl = LabelEncoder()
+    data["labels_encoded"] = lbl.fit_transform(data["labels"])
+    data = data[~data['image_path'].str.endswith('.lnk')]
+    df = data[data["data set"] == "train"].reset_index(drop=True)
+    df = df[df["labels"] == class_name].reset_index(drop=True)
+    dataset = CustomDataset(df=df, transform=test_transform())
+    dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
+    return dataloader
+
+
+def store_activations(model, dataloader, device):
+    activations = {}
+    hooks = []
+
+    def get_activation(name, activations):
+        def hook(module, input, output):
+            if name not in activations:
+                activations[name] = []
+            activations[name].append(output.detach().cpu().numpy())
+        return hook
+
+    for name, module in model.named_modules():
+        if isinstance(module, nn.Conv2d):
+            hook = module.register_forward_hook(get_activation(name, activations))
+            hooks.append(hook)
+
+    for inputs, labels, _ in dataloader:
+        inputs = inputs.to(device)
+        with torch.no_grad():
+            model(inputs)
+
+    for hook in hooks:
+        hook.remove()
+
+    # Concatenate activations across all batches
+    for name in activations:
+        activations[name] = np.concatenate(activations[name], axis=0)
+
+    return activations
+
+def find_most_activated_filters(activations):
+    most_activated_filters = {}
+
+    for layer, activation_map in activations.items():
+        # Calculate mean absolute activation across the batch dimension
+        mean_abs_activations = np.mean(np.abs(activation_map), axis=(0, 2, 3))  # Shape: (num_filters,)
+
+        # Find the index of the filter with the highest mean absolute activation
+        most_activated_index = np.argmax(mean_abs_activations)
+
+        # Retrieve the mean activation of the most positively activated filter
+        mean_activation = mean_abs_activations[most_activated_index]
+
+        # Store the index of the most positively activated filter along with its mean activation
+        most_activated_filters[layer] = {
+            'index': most_activated_index,
+            'mean_activation': mean_activation
+        }
+
+    return most_activated_filters
+
+
+
+
