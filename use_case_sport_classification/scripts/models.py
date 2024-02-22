@@ -12,7 +12,7 @@ class FineTunedVGG(nn.Module):
         self.avgpool = vgg.avgpool
         self.classifier = vgg.classifier
 
-        # Freeze all layers
+        # unfreeze all layers
         for param in vgg.parameters():
             param.requires_grad = True
         
