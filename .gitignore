@@ -5,6 +5,10 @@ use_case_sport_classification/data/test/
 use_case_sport_classification/data/sports.csv
 use_case_sport_classification/data/idx_to_names.json
 
+# unused scripts
+use_case_sport_classification/scripts/feature_visualizer.py
+use_case_sport_classifcation/scripts/find_filters.py
+
 # models
 models_weight/
 
