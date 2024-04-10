@@ -20,7 +20,11 @@ If you simply want to use the notebooks locally, you can use the provided Compos
 
 * Install and launch [Docker Desktop](https://www.docker.com/).
 * Download the `docker-compose.yml` file.
-* Deploy the Docker image with `docker compose up`.
+* Deploy the Docker image with:
+
+```
+docker compose up
+```
 
 ## Adding a new notebook
 

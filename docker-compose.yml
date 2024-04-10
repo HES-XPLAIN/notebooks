@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   notebooks:
     image: ghcr.io/hes-xplain/notebooks:latest
