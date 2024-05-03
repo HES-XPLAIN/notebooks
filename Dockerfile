@@ -3,7 +3,7 @@ FROM ghcr.io/hes-xplain/docker-notebook-base:latest
 USER root
 
 # Set environment variables
-ARG USER=xplain
+ARG USER=jovyan
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
