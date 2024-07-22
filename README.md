@@ -2,12 +2,6 @@
 
 Public notebooks for the [hes-xplain.github.io](https://hes-xplain.github.io/) website.
 
-The current notebooks include:
-
-* **Class Activation Maps**: Sport Image Classification
-* **Rules extraction**: Sport Image Classification
-* **Activation-Maximizatio**: WIP
-
 ## Docker image
 
 A Docker image containing the HES-XPLAIN notebooks is provided.
