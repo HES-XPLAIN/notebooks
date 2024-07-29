@@ -7,8 +7,8 @@ ARG USER=jovyan
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
-ENV USER ${USER}
-ENV HOME /home/${USER}
+ENV USER=${USER}
+ENV HOME=/home/${USER}
 
 # Make sure the contents of our repo is in $HOME
 COPY --chown="${USER_UID}:${USER_GID}" use_case_sport_classification/ $HOME
