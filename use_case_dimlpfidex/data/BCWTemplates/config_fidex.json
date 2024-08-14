@@ -8,7 +8,7 @@
     "test_pred_file": "predTest.out",
     "rules_outfile": "fidexRules.rls",
     "attributes_file": "attributes.txt",
-    "weights_file": "Weights/weights.wts",
+    "weights_file": "weights.wts",
     "stats_file": "fidexStats.txt",
     "console_file": "fidexResult.txt",
     "normalization_file": "normalization_stats.txt",

@@ -5,7 +5,7 @@
     "train_class_file": "trainClass.txt",
     "global_rules_outfile": "globalRules.rls",
     "attributes_file": "attributes.txt",
-    "weights_file": "Weights/weights.wts",
+    "weights_file": "weights.wts",
     "console_file": "fidexGloRulesResult.txt",
     "normalization_file": "normalization_stats.txt",
     "nb_attributes": 30,
