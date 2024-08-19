@@ -7,6 +7,27 @@ import torch.nn as nn
 from torch.utils.data import random_split, DataLoader
 import matplotlib.pyplot as plt
 
+
+class EarlyStopper:
+    def __init__(self, patience=5, min_delta=0, verbose=False):
+        self.patience = patience
+        self.min_delta = min_delta
+        self.counter = 0
+        self.min_validation_loss = float('inf')
+        self.verbose = verbose
+
+    def __call__(self, validation_loss):
+        if validation_loss < self.min_validation_loss:
+            self.min_validation_loss = validation_loss
+            self.counter = 0
+        elif validation_loss > (self.min_validation_loss + self.min_delta):
+            self.counter += 1
+            if self.counter >= self.patience:
+                if self.verbose:
+                    print("Early stop")
+                return True
+        return False
+
 def save_model(epochs, model, optimizer, criterion, name):
     """
     Function to save the trained model to disk.

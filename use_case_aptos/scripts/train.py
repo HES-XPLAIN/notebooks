@@ -6,85 +6,68 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from tqdm import tqdm
 
 from model import VGGAptos
-from helpers import get_dataloaders, save_model, save_plots, plot_confusion_matrix
+from helpers import get_dataloaders, save_model, save_plots, plot_confusion_matrix, EarlyStopper
 
 
 def train(model, train_loader, optimizer, criterion, device):
-    """
-    Performs training on a model using a training dataset.
-
-    :param model: The model to train.
-    :type model: torch.nn.Module
-    :param train_loader: The data loader for the training dataset.
-    :type train_loader: torch.utils.data.DataLoader
-    :param optimizer: The optimizer for updating the model's weights.
-    :type optimizer: torch.optim.Optimizer
-    :param criterion: The loss criterion to calculate the loss.
-    :type criterion: torch.nn.Module
-    :param device: The device to perform training on.
-    :type device: torch.device
-    :return: The average loss and accuracy for the training epoch.
-    :rtype: float, float
-    """
     model.train()
-    train_loss = 0.0
-    train_correct = 0.0
+    total_loss = 0
+    total_correct = 0
+    total_samples = 0
 
-    for image, labels in tqdm(train_loader):
-        image, labels = image.to(device), labels.float().to(device)
+    progress_bar = tqdm(train_loader, desc='Training', position=0, leave=True)
+
+    for inputs, labels in progress_bar:
+        inputs, labels = inputs.to(device), labels.to(device)
+
         optimizer.zero_grad()
-
-        outputs = model(image)
-        loss = criterion(outputs, labels.long())
-        train_loss += loss.item()
-
-        _, preds = torch.max(outputs, 1)
-        train_correct += (preds == labels).sum().item()
-
+        output_probs = model(inputs)
+        loss = criterion(output_probs, labels)
         loss.backward()
         optimizer.step()
+        total_loss += loss.item()
 
-    epoch_loss = train_loss / len(train_loader)
-    epoch_acc = 100. * (train_correct / len(train_loader.dataset))
-    return epoch_loss, epoch_acc
+        _, predicted = torch.max(output_probs, 1)
+        correct = (predicted == labels).sum().item()
+        total_correct += correct
+        total_samples += labels.size(0)
+
+        # Update the progress bar
+        progress_bar.set_postfix({'loss': total_loss / len(train_loader),
+                                  'accuracy': 100. * total_correct / total_samples})
+
+    return total_loss / len(train_loader), 100. * total_correct / total_samples
 
 
-def validate(model, val_loader, criterion, device):
-    """
-    Performs validation on a model using a validation dataset for 1 epoch.
-
-    :param model: The model to validate.
-    :type model: torch.nn.Module
-    :param val_loader: The data loader for the validation dataset.
-    :type val_loader: torch.utils.data.DataLoader
-    :param criterion: The loss criterion to calculate the loss.
-    :type criterion: torch.nn.Module
-    :param device: The device to perform validation on.
-    :type device: torch.device
-    :return: The average loss and accuracy for the validation epoch.
-    :rtype: float, float
-    """
+def validation( model, val_loader, criterion, device):
     model.eval()
-    valid_loss = 0.0
-    valid_correct = 0
+    total_loss = 0
+    total_correct = 0
+    total_samples = 0
+
+    progress_bar = tqdm(val_loader, desc='Validation', position=0, leave=True)
 
     with torch.no_grad():
-        for image, labels in tqdm(val_loader):
-            image, labels = image.to(device), labels.float().to(device)
+        for inputs, labels in progress_bar:
+            inputs, labels = inputs.to(device), labels.to(device)
+            output_probs = model(inputs)
+            loss = criterion(output_probs, labels)
 
-            outputs = model(image)
-            loss = criterion(outputs, labels.long())
-            valid_loss += loss.item()
+            total_loss += loss.item()
+            _, predicted = torch.max(output_probs, 1)
+            correct = (predicted == labels).sum().item()
+            total_correct += correct
+            total_samples += labels.size(0)
 
-            _, preds = torch.max(outputs, 1)
-            valid_correct += (preds == labels).sum().item()
+            # Update the progress bar
+            progress_bar.set_postfix({'loss': total_loss / len(val_loader),
+                                      'accuracy': 100. * total_correct / total_samples})
 
-    epoch_loss = valid_loss / len(val_loader)
-    epoch_acc = 100. * (valid_correct / len(val_loader.dataset))
-    return epoch_loss, epoch_acc
+    return total_loss / len(val_loader), 100. * total_correct / total_samples
 
 
 def main():
+    
     # Argument parser
     parser = argparse.ArgumentParser(description="Train a VGG model on APTOS dataset.")
     parser.add_argument('-e', '--epochs', type=int, default=50, help='Number of epochs to train the model.')
@@ -118,47 +101,27 @@ def main():
     print(f"{total_params:,} total parameters.")
     print(f"{trainable_params:,} training parameters.")
 
-    # Training loop
-    best_val_acc = -float('inf')
-    early_stop_counter = 0
+    # Train model
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
+    criterion = torch.nn.CrossEntropyLoss()
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5, patience=2, verbose=True)
+    early_stopper = EarlyStopper(patience=5, min_delta=0.05, verbose=True)
 
-    train_losses, val_losses = [], []
-    train_accs, val_accs = [], []
-
+    print('Start training')
     for epoch in range(args.epochs):
-        print(f"[INFO]: Epoch {epoch + 1} of {args.epochs}")
         train_loss, train_acc = train(model, train_loader, optimizer, criterion, device)
-        val_loss, val_acc = validate(model, val_loader, criterion, device)
-
-        train_losses.append(train_loss)
-        val_losses.append(val_loss)
-        train_accs.append(train_acc)
-        val_accs.append(val_acc)
-        scheduler.step(val_acc)
-
-        print(f"Training loss: {train_loss:.3f}, Training acc: {train_acc:.3f}")
-        print(f"Validation loss: {val_loss:.3f}, Validation acc: {val_acc:.3f}")
-        print('-' * 50)
-
-        # Early stopping
-        if val_acc > best_val_acc:
-            best_val_acc = val_acc
-            best_model = model.state_dict()
-            early_stop_counter = 0
-        else:
-            early_stop_counter += 1
-
-        if early_stop_counter >= 6:
-            print("Early stopping triggered.")
+        val_loss, val_acc = validation(model, val_loader, criterion, device)
+        scheduler.step(val_loss)
+        print(f'Training - Epoch {epoch}, Loss: {train_loss}, Accuracy: {train_acc}')
+        print(f'Validation - Epoch {epoch}, Loss: {val_loss}, Accuracy: {val_acc}')
+        # early stopping
+        if early_stopper(val_loss):
             break
+    torch.save(model.state_dict(), args.name+".pth")
+    print('Training done')
 
-        print(f"Early stopping counter: {early_stop_counter}")
-
-    # Save the best model, plots, and confusion matrix
-    save_model(args.epochs, model, optimizer, criterion, args.name)
-    save_plots(train_accs, val_accs, train_losses, val_losses, args.name)
+    # plot confusion matrix
     plot_confusion_matrix(model, test_loader, device, args.name)
-
 
 if __name__ == '__main__':
     main()
