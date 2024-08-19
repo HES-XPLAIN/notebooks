@@ -5,8 +5,8 @@ from torch.optim import Adam
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from tqdm import tqdm
 
-from .model import VGGAptos
-from .helpers import get_dataloaders, save_model, save_plots, plot_confusion_matrix
+from model import VGGAptos
+from helpers import get_dataloaders, save_model, save_plots, plot_confusion_matrix
 
 
 def train(model, train_loader, optimizer, criterion, device):
@@ -30,7 +30,7 @@ def train(model, train_loader, optimizer, criterion, device):
     train_loss = 0.0
     train_correct = 0.0
 
-    for image, labels, _ in tqdm(train_loader):
+    for image, labels in tqdm(train_loader):
         image, labels = image.to(device), labels.float().to(device)
         optimizer.zero_grad()
 
@@ -69,7 +69,7 @@ def validate(model, val_loader, criterion, device):
     valid_correct = 0
 
     with torch.no_grad():
-        for image, labels, _ in tqdm(val_loader):
+        for image, labels in tqdm(val_loader):
             image, labels = image.to(device), labels.float().to(device)
 
             outputs = model(image)
@@ -88,7 +88,7 @@ def main():
     # Argument parser
     parser = argparse.ArgumentParser(description="Train a VGG model on APTOS dataset.")
     parser.add_argument('-e', '--epochs', type=int, default=50, help='Number of epochs to train the model.')
-    parser.add_argument('-lr', '--learning-rate', type=float, default=0.0001, help='Learning rate for training.')
+    parser.add_argument('-lr', '--learning-rate', type=float, default=1e-4, help='Learning rate for training.')
     parser.add_argument('-m', '--model', type=str, default='vgg', help='Model type (default: vgg).')
     parser.add_argument('--name', type=str, default='default_name', help='Custom name for the model.')
     args = parser.parse_args()
@@ -97,11 +97,13 @@ def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Load data
-    train_loader, val_loader, test_loader = get_dataloaders()
+    # TODO: remove hard code
+    dataset_path = "/home/arthur.babey/workspace/project/aptos/data/aptos2019-blindness-detection/train_images"
+    train_loader, val_loader, test_loader = get_dataloaders(dataset_path)
 
     # Initialize model
     if args.model == 'vgg':
-        model = VGGAptos()
+        model = VGGAptos(mode="training")
     else:
         raise ValueError(f"Model type '{args.model}' not supported.")
 
@@ -121,7 +123,7 @@ def main():
     early_stop_counter = 0
 
     train_losses, val_losses = [], []
-    train_accs, val_accs = []
+    train_accs, val_accs = [], []
 
     for epoch in range(args.epochs):
         print(f"[INFO]: Epoch {epoch + 1} of {args.epochs}")
