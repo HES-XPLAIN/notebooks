@@ -6,10 +6,22 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from tqdm import tqdm
 
 from model import VGGAptos
-from helpers import get_dataloaders, save_model, save_plots, plot_confusion_matrix, EarlyStopper
+from helpers import get_dataloaders, plot_confusion_matrix, EarlyStopper
 
 
 def train(model, train_loader, optimizer, criterion, device):
+    """This function performs one epoch of training.
+
+    Args:
+        model (torch.nn.Module): VGG model to fine-tune.
+        train_loader (torch.utils.data.DataLoader): DataLoader for training data.
+        optimizer (torch.optim.Optimizer): Optimizer for updating model parameters.
+        criterion (torch.nn.modules.loss._Loss): Loss function used during training.
+        device (torch.device): Device on which to perform training, e.g., 'cuda' or 'cpu'.
+
+    Returns:
+        tuple: A tuple containing training loss (float) and accuracy (float) per epoch.
+    """
     model.train()
     total_loss = 0
     total_correct = 0
@@ -40,6 +52,18 @@ def train(model, train_loader, optimizer, criterion, device):
 
 
 def validation( model, val_loader, criterion, device):
+    """This function do one epoch of validation.
+
+    Args:
+        model (torch.nn.Module): VGG model to evaluate.
+        val_loader (torch.utils.data.DataLoader): DataLoader for validation data.
+        criterion (torch.nn.modules.loss._Loss): Loss function used for validation.
+        device (torch.device): Device on which to perform validation, e.g., 'cuda' or 'cpu'.
+
+    Returns:
+        tuple: A tuple containing validation loss (float) and accuracy (float) per epoch.
+    """    
+
     model.eval()
     total_loss = 0
     total_correct = 0
@@ -67,7 +91,15 @@ def validation( model, val_loader, criterion, device):
 
 
 def main():
-    
+
+    """
+    Run the training pipeline, including data loading, model training, and model evaluation.
+    Generate a confusion matrix and save the model to disk.
+
+    Raises:
+        ValueError: If the model type is not supported.
+    """
+
     # Argument parser
     parser = argparse.ArgumentParser(description="Train a VGG model on APTOS dataset.")
     parser.add_argument('-e', '--epochs', type=int, default=50, help='Number of epochs to train the model.')

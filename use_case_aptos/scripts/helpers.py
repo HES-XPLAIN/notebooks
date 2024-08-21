@@ -139,6 +139,9 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss, name):
     plt.savefig(f"./plots/{name}_loss_plot.png")
 
 def get_dataloaders(dataset_path: str) -> tuple[DataLoader, DataLoader, DataLoader]:
+    """
+    Specific method to get the dataloaders for the APTOS dataset
+    """
 
     # Set seed for reproducibility
     torch.manual_seed(42)
