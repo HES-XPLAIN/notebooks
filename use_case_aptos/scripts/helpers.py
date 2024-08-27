@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import random_split, DataLoader
 import matplotlib.pyplot as plt
-
+import os
 
 class EarlyStopper:
     def __init__(self, patience=5, min_delta=0, verbose=False):
@@ -137,6 +137,37 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss, name):
     plt.ylabel('Loss')
     plt.legend()
     plt.savefig(f"./plots/{name}_loss_plot.png")
+
+def plot_image_and_score(explainer, ax_img, ax_score, img_path, idx_to_class, true_label="Proliferative DR"):
+
+    img = omniImage(Image.open(img_path))
+    
+    # Generate explanations
+    explanations = explainer.explain(img, y=class2idx["Moderate"])
+    
+    # Extract image and score matrices
+    expl = explanations.get_explanations(index=0)
+    image = expl['image']
+    score = expl['scores']
+    
+    # Get the predicted class
+    class_name = idx_to_class[expl['target_label']]
+    
+    # Plot the original image
+    ax_img.imshow(image)
+    ax_img.axis('off')
+    ax_img.set_title(f"Predicted = {class_name}\nTrue = {true_label}")
+    
+    # Plot the score matrix
+    ax_score.imshow(score, cmap='jet')
+    ax_score.axis('off')
+    ax_score.set_title("Score")
+
+def select_random_images(folder_path, num_images=4):
+    all_files = [f for f in os.listdir(folder_path) if f.endswith(('.png', '.jpg', '.jpeg'))]
+    selected_files = random.sample(all_files, num_images)
+    return [os.path.join(folder_path, f) for f in selected_files]
+    
 
 def get_dataloaders(dataset_path: str) -> tuple[DataLoader, DataLoader, DataLoader]:
     """
