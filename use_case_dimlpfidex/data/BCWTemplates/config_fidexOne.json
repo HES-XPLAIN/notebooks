@@ -6,7 +6,7 @@
     "test_data_file": "testDataSample.txt",
     "rules_outfile": "rule.rls",
     "attributes_file": "attributes.txt",
-    "weights_file": "Weights/weights.wts",
+    "weights_file": "weights.wts",
     "normalization_file": "normalization_stats.txt",
     "nb_attributes": 30,
     "nb_classes": 2
