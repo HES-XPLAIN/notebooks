@@ -112,8 +112,7 @@ def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Load data
-    # TODO: remove hard code
-    dataset_path = "/home/arthur.babey/workspace/project/aptos/data/aptos2019-blindness-detection_augmented/train_images"
+    dataset_path = "./data/aptos2019-blindness-detection/train_images"
     train_loader, val_loader, test_loader = get_dataloaders(dataset_path)
 
     # Initialize model

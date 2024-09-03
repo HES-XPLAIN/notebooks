@@ -7,6 +7,8 @@ import torch.nn as nn
 from torch.utils.data import random_split, DataLoader
 import matplotlib.pyplot as plt
 import os
+from omnixai_community.data.image import Image as omniImage
+from PIL import Image
 
 class EarlyStopper:
     def __init__(self, patience=5, min_delta=0, verbose=False):
@@ -138,12 +140,25 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss, name):
     plt.legend()
     plt.savefig(f"./plots/{name}_loss_plot.png")
 
-def plot_image_and_score(explainer, ax_img, ax_score, img_path, idx_to_class, true_label="Proliferative DR"):
+def print_rule_nicely(rule, target_class):
+    conditions, prediction = rule
+    prediction_text = "belongs" if prediction == 1 else "does not belong"
+    
+    print(f"If", end=" ")
+    for i, condition in enumerate(conditions):
+        feature, operator, value = condition.split()
+        print(f"feature {feature} {operator} {value}", end="")
+        if i < len(conditions) - 1:
+            print(" and ", end="")
+    
+    print(f" then the image {prediction_text} to the '{target_class}' class")
+
+def plot_image_and_score(explainer, ax_img, ax_score, img_path, idx2class, class2idx, true_label="Proliferative DR"):
 
     img = omniImage(Image.open(img_path))
     
     # Generate explanations
-    explanations = explainer.explain(img, y=class2idx["Moderate"])
+    explanations = explainer.explain(img)
     
     # Extract image and score matrices
     expl = explanations.get_explanations(index=0)
@@ -151,7 +166,7 @@ def plot_image_and_score(explainer, ax_img, ax_score, img_path, idx_to_class, tr
     score = expl['scores']
     
     # Get the predicted class
-    class_name = idx_to_class[expl['target_label']]
+    class_name = idx2class[expl['target_label']]
     
     # Plot the original image
     ax_img.imshow(image)
