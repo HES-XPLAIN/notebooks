@@ -1,14 +1,14 @@
+import os
 import random
-import numpy as np
-from torchvision import datasets, transforms
 
+import matplotlib.pyplot as plt
+import numpy as np
 import torch
 import torch.nn as nn
-from torch.utils.data import random_split, DataLoader
-import matplotlib.pyplot as plt
-import os
-from omnixai_community.data.image import Image as omniImage
 from PIL import Image
+from torch.utils.data import DataLoader, random_split
+from torchvision import datasets, transforms
+from omnixai_community.data.image import Image as omniImage
 
 class EarlyStopper:
     def __init__(self, patience=5, min_delta=0, verbose=False):
@@ -184,13 +184,13 @@ def select_random_images(folder_path, num_images=4):
     return [os.path.join(folder_path, f) for f in selected_files]
     
 
-def get_dataloaders(dataset_path: str) -> tuple[DataLoader, DataLoader, DataLoader]:
+def get_dataloaders(dataset_path: str , seed: int = 42) -> tuple[DataLoader, DataLoader, DataLoader]:
     """
     Specific method to get the dataloaders for the APTOS dataset
     """
 
     # Set seed for reproducibility
-    torch.manual_seed(42)
+    torch.manual_seed(seed)
 
     # Define transformations for train, validation, and test sets
     train_transform = transforms.Compose([
@@ -228,7 +228,7 @@ def get_dataloaders(dataset_path: str) -> tuple[DataLoader, DataLoader, DataLoad
     test_size = len(full_dataset) - train_size - val_size
 
     train_dataset, val_dataset, test_dataset = random_split(
-        full_dataset, [train_size, val_size, test_size], generator=torch.Generator().manual_seed(42)
+        full_dataset, [train_size, val_size, test_size], generator=torch.Generator().manual_seed(seed)
     )
 
     # Apply respective transforms to each dataset
