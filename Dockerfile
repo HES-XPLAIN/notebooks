@@ -13,6 +13,7 @@ ENV HOME=/home/${USER}
 # Make sure the contents of our repo is in $HOME
 COPY --chown="${USER_UID}:${USER_GID}" use_case_sport_classification/ $HOME/use_case_sport_classification/
 COPY --chown="${USER_UID}:${USER_GID}" use_case_dimlpfidex/ $HOME/use_case_dimlpfidex/
+COPY --chown="${USER_UID}:${USER_GID}" use_case_aptos/ $HOME/use_case_aptos/
 
 # Set working directory
 WORKDIR ${HOME}

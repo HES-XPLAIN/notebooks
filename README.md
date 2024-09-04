@@ -30,13 +30,13 @@ also added to the `Dockerfile`, i.e.:
 COPY --chown="${USER_UID}:${USER_GID}" use_case_sport_classification/ $HOME
 ```
 
-> **Important**
+> [!WARNING]
 > If new dependencies to run the notebook experiments are needed, they should be
 > included in the [docker-notebook-base](https://github.com/HES-XPLAIN/docker-notebook-base) image.
 >
 > A new base image needs to be then generated. Refer to the related [README](https://github.com/HES-XPLAIN/docker-notebook-base/blob/main/README.md).
 
-> **Note**
+> [!NOTE]
 > The current list of included high-level dependencies is visible here: [requirements.txt](https://github.com/HES-XPLAIN/docker-notebook-base/blob/main/requirements.txt)
 
 ## Build
